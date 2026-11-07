@@ -1,0 +1,18 @@
+syntax = "proto3";
+package ricart;
+option go_package = "ricart/proto;proto";
+
+service MutualExclusion {
+  // The RPC response IS the "reply" in Ricart-Agrawala.
+  // The receiving node holds the call open until it grants permission.
+  rpc RequestAccess(Request) returns (Reply);
+}
+
+message Request {
+  int64 timestamp = 1;  // sender's Lamport timestamp
+  int32 node_id   = 2;  // sender's ID (tie-breaker)
+}
+
+message Reply {
+  int32 node_id = 1;    // who is granting permission
+}
