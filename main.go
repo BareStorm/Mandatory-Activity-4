@@ -1,12 +1,16 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"net"
+	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	pb "ricart/proto"
 
@@ -37,7 +41,9 @@ func main() {
 	id := flag.Int("id", 0, "this node's unique, non-zero ID")
 	addr := flag.String("addr", "localhost:5001", "address this node listens on")
 	peersFlag := flag.String("peers", "", "other nodes as id=host:port, comma-separated")
+	auto := flag.Bool("auto", false, "request the critical section at random intervals")
 	flag.Parse()
+	log.SetFlags(0) // logs are [id | t=clock] only, no wall-clock prefix
 
 	if *id == 0 {
 		log.Fatal("you must supply a unique non-zero -id")
@@ -67,7 +73,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// PART 2 hooks in here: trigger node.requestCriticalSection()
-	// (e.g. on a timer or keypress).
+if *auto {
+		for {
+			time.Sleep(time.Duration(1000+rand.Intn(3000)) * time.Millisecond)
+			node.RequestCriticalSection()
+		}
+	}
+	fmt.Println("press Enter to request the critical section")
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		go node.RequestCriticalSection()
+	}
 	select {}
 }
