@@ -73,7 +73,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-if *auto {
+	if *auto {
 		for {
 			time.Sleep(time.Duration(1000+rand.Intn(3000)) * time.Millisecond)
 			node.RequestCriticalSection()

@@ -35,7 +35,7 @@ type Node struct {
 	state		State
 	clock		int64			//Lamport clock
 	reqTS		int64			//timestamp of own current request (while WANTED)
-	deffered	[]chan struct{} //one channel per deffered incoming request
+	deferred	[]chan struct{} //one channel per deferred incoming request
 
 }
 
